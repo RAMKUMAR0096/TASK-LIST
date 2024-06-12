@@ -1,7 +1,7 @@
 const mongoose=require("mongoose")
   
 const getdataBase=()=>{
-    mongoose.connect("mongodb+srv://ramkumar:ramkumar%4096@cluster0.hlx15pb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    mongoose.connect(process.env.MONGODB_URI)
 .then(()=>{
     console.log('mongoose connected');
 })
