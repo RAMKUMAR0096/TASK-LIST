@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {{!-- <link rel="stylesheet" href="css/login.css"> --}}
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .alert {
+            color: red;
+            font-size: 14px;
+        
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-yellow-400 lg:bg-blue-400 md:bg-red-400">
+
+    {{!-- <h1>Home</h1>
+    <h2>hello </h2> --}}
+    <p id="userID" style="display: none;">{{naming}}</p>
+    {{!-- <p id="user_perId"></p> --}}
+{{!-- 
+    <form action="/store_task" method="post">
+        <input type="text" name="task">
+        <input type="text" name="user_id" value="" id="uid" style="display: none;">
+        <input type="submit">
+    </form>
+     --}}
+
+
+
+
+
+     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-sm md:max-w-screen-md xl:max-w-screen-lg p-4 ">
+        <div class="flex justify-end">
+            <a href="/" onclick="return confirm('Are you sure want to Sign Out')" class="bg-transparant hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+        
+        <h1 class="container mx-auto font-bold flex justify-center text-3xl font-serif">TASK LIST</h1>
+        <div class="container mx-auto font-bold flex justify-center mt-3">
+            {{#if edit_id}}
+            <form id="taskForm" method="post" action="/update_task/{{edit_id}}" class="flex">
+                <input id="taskInput"  type="text" name="task" value="{{edit_task.task}}"  class="w-64 py-2 px-4 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:border-blue-500">
+                <input type="text" name="user_id" value="" id="uid" style="display: none;">
+                <input type="submit" value="UPDATE TASK" class="w-26 bg-blue-500 text-white py-2 px-4 rounded-r-md shadow-sm hover:bg-blue-600 focus:outline-none focus:bg-blue-600 text-4">
+            </form>
+            {{else}}
+            <form id="taskForm" action="/store_task" method="post" class="flex">
+                <input id="taskInput" type="text" name="task" class="w-64 py-2 px-4 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:border-blue-500">
+                <input type="text" name="user_id" value="" id="uid" style="display: none;">
+                <input type="submit" value="ADD TASK" class="w-26 bg-blue-500 text-white py-2 px-4 rounded-r-md shadow-sm hover:bg-blue-600 focus:outline-none focus:bg-blue-600 text-4">
+            </form>
+            
+            {{/if}}
+        </div>
+        <div id="alertMessage" class="alert   container mx-auto font-bold flex justify-center"></div>
+
+        <div class="container mx-auto font-bold flex justify-center">
+            <ul class="container mx-auto font-bold flex flex-col justify-center mt-8">
+                {{#each tasks}}
+                <li class="flex flex-row justify-center p-2"><div class="w-60 border border-dashed border-gray-300 p-2 flex"> <input id="checkbox_{{this._id}}" type="checkbox"><p class="pt-3 lg:p-0 md:p-0">{{this.task}}</p></div> <a href="/home/?edit_id={{this._id}}" class="border border-dashed border-gray-300 p-2">edit <i class="fas fa-edit"></i></a> <a href="/home/?delete_id={{this._id}}" onclick="return confirm('Are you sure want to delete is task?')" class="  border border-dashed border-gray-300 p-2">Delete <i class="fa-solid fa-trash"></i></a></li>
+                {{/each}}
+            </ul>
+            
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("taskForm").addEventListener("submit", function(event) {
+            const userInput = document.getElementById("taskInput").value.trim();
+            const alertMessage = document.getElementById("alertMessage");
+        
+            if (userInput === "") {
+                event.preventDefault(); // Prevent form submission
+                alertMessage.textContent = "*Please provide your tasks.";
+            }
+        });
+        
+    </script>
+
+    <script>
+            // Function to handle checkbox state persistence
+        function handleCheckboxPersistence(taskId) {
+        var checkbox = document.getElementById('checkbox_' + taskId);
+        var storageKey = 'checkbox_' + taskId;
+
+        // Check if there's a stored value for the checkbox
+        var isChecked = localStorage.getItem(storageKey) === 'true';
+
+        // Set the initial checked state
+        checkbox.checked = isChecked;
+
+        // Add event listener to update local storage when checkbox state changes
+        checkbox.addEventListener('change', function () {
+            localStorage.setItem(storageKey, checkbox.checked);
+        });
+     }
+
+       // Loop through tasks and call the function for each checkbox
+       var tasks = document.querySelectorAll('.w-60 input[type="checkbox"]');
+       tasks.forEach(function (task) {
+        var taskId = task.id.split('_')[1];
+        handleCheckboxPersistence(taskId);
+       });
+    </script>
+
+
+
+
+
+
+    <script>
+    
+        let user_id=document.getElementById('userID').textContent;
+        if(user_id){
+            let userTdInJson={user_id}
+        //console.log(userTdInJson)
+        //console.log(user_id)
+          let user_id_stringfy=JSON.stringify(userTdInJson);
+       // console.log(user_id_stringfy)
+          localStorage.setItem("user_id",user_id_stringfy);
+          console.log("stored success")
+          let user_id_GetLocalstorage=JSON.parse(localStorage.getItem("user_id"))
+          
+        //console.log(user_id_GetLocalstorage.user_id)
+       // let user_perId=document.getElementById('user_perId')
+       // user_perId.textContent=user_id_GetLocalstorage.user_id;
+          let uid=document.getElementById('uid').value=user_id_GetLocalstorage.user_id;
+        //console.log(uid)
+        //uid.innerHTML=user_id_GetLocalstorage.user_id;
+        }else{
+            //console.log("no data");
+            let user_id_GetLocalstorage=JSON.parse(localStorage.getItem("user_id"))
+          
+        //console.log(user_id_GetLocalstorage.user_id)
+       // let user_perId=document.getElementById('user_perId')
+       // user_perId.textContent=user_id_GetLocalstorage.user_id;
+          let uid=document.getElementById('uid').value=user_id_GetLocalstorage.user_id;
+          console.log(uid)
+        }
+        
+
+    </script>
+</body>
+</html>
