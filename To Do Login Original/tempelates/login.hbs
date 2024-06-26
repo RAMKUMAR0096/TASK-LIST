@@ -6,6 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="css/login.css">
+    <script>
+        // Prevent the back button navigation
+        window.onload = function () {
+            history.pushState(null, null, location.href);
+
+            window.onpopstate = function (event) {
+                window.location.href = '/'; // Change this to your desired internal page
+            };
+
+            window.onbeforeunload = function (event) {
+                window.location.href = '/'; // Change this to your desired internal page
+            };
+        };
+
+
+        // window.onload = function() {
+        // if (window.history && window.history.pushState) {
+        //     window.history.pushState('forward', null, null);
+        //      window.history.pushState('backward', null, null);
+        //     window.onpopstate = function(event) {
+        //         window.history.go(1);
+        //     };
+        // } {{!-- }; --}}
+    </script>
 </head>
 <body>
 
