@@ -12,7 +12,12 @@ DB.getdataBase();
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: false }))
-app.use(session({ secret: 'your_secret_key' }));  // For session security
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: false
+}));
+ // For session security
 
 const tempelatePath = path.join(__dirname, '/tempelates')
 const publicPath = path.join(__dirname, '/public')
