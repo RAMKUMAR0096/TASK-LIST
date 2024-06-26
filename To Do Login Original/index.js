@@ -21,6 +21,10 @@ const publicPath = path.join(__dirname, '/public')
 app.set('view engine', 'hbs')
 app.set('views', tempelatePath)
 app.use(express.static(publicPath))
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    next();
+});
 
 
 
@@ -33,10 +37,17 @@ app.get('/signup', (req, res) => {
 app.get('/', (req, res) => {
     res.render('login')
 })
+//Middleware to check if user is logged in
+function requireLogin(req, res, next) {
+    if (req.session.userID) {
+        next();
+    } else {
+        res.redirect('/');
+    }
+}
 
 
-
-app.get('/home', async (req, res) => {
+app.get('/home',requireLogin, async (req, res) => {
     const userID = req.session.userID;
     //console.log(typeof(userID))
 
